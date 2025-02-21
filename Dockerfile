@@ -5,13 +5,16 @@ RUN sed -i 's/\r$//' ./gradlew
 RUN chmod +x ./gradlew
 
 ARG MONGO_URI
+ARG OTEL_URI
 ENV MONGO_URI=${MONGO_URI}
+ENV OTEL_URI=${OTEL_URI}
 
 RUN ./gradlew clean build -Dquarkus.native.enabled=true \
     -Dquarkus.native.container-build=false \
     -Dquarkus.native.builder-image=graalvm \
     -Dquarkus.native.container-runtime=docker \
-    -Dquarkus.mongodb.connection-string=${MONGO_URI}
+    -Dquarkus.mongodb.connection-string=${MONGO_URI} \
+    -Dquarkus.otel.exporter.otlp.endpoint=${OTEL_URI}
 
 FROM registry.access.redhat.com/ubi9/ubi-minimal:9.2
 WORKDIR /app
@@ -19,7 +22,9 @@ RUN chown 1001 /app && chmod "g+rwX" /app && chown 1001:root /app
 COPY --from=build --chown=1001:root /app/build/*-runner /app/application
 
 ARG MONGO_URI
+ARG OTEL_URI
 ENV MONGO_URI=${MONGO_URI}
+ENV OTEL_URI=${OTEL_URI}
 
 EXPOSE 8080
 USER 1001
@@ -27,5 +32,6 @@ USER 1001
 ENTRYPOINT [ \
 "/app/application", \
 "-Dquarkus.http.host=0.0.0.0", \
-"-Dquarkus.mongodb.connection-string=${MONGO_URI}" \
+"-Dquarkus.mongodb.connection-string=${MONGO_URI}", \
+"-Dquarkus.otel.exporter.otlp.endpoint=${OTEL_URI}" \
 ]

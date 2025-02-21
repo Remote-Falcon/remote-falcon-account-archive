@@ -19,6 +19,9 @@ dependencies {
     implementation ('com.github.Remote-Falcon:remote-falcon-library:3e035c7617') {
         exclude group: "org.springframework.boot", module: "spring-boot-starter-data-mongodb"
     }
+    implementation 'io.quarkus:quarkus-opentelemetry'
+    implementation 'io.quarkus:quarkus-smallrye-health'
+    implementation 'io.micrometer:micrometer-observation:1.12.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2'
     compileOnly 'org.projectlombok:lombok:1.18.36'
