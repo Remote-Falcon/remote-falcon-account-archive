@@ -6,6 +6,9 @@ plugins {
 repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+        url 'https://jitpack.io'
+    }
 }
 
 dependencies {
@@ -13,6 +16,13 @@ dependencies {
     implementation 'io.quarkus:quarkus-mongodb-panache'
     implementation 'io.quarkus:quarkus-scheduler'
     implementation 'io.quarkus:quarkus-arc'
+    implementation ('com.github.Remote-Falcon:remote-falcon-library:3e035c7617') {
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-data-mongodb"
+    }
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2'
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
     testImplementation 'io.quarkus:quarkus-junit5'
 }
 
