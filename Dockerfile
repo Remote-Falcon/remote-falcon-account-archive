@@ -35,5 +35,5 @@ ENTRYPOINT [ \
 "-Dquarkus.http.host=0.0.0.0", \
 "-Dquarkus.mongodb.connection-string=${MONGO_URI}", \
 "-Dquarkus.otel.exporter.otlp.endpoint=${OTEL_URI}", \
-"-Dquarkus.otel.enabled=false"
+"-Dquarkus.otel.enabled=false" \
 ]
