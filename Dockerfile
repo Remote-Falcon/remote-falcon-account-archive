@@ -14,7 +14,8 @@ RUN ./gradlew clean build -Dquarkus.native.enabled=true \
     -Dquarkus.native.builder-image=graalvm \
     -Dquarkus.native.container-runtime=docker \
     -Dquarkus.mongodb.connection-string=${MONGO_URI} \
-    -Dquarkus.otel.exporter.otlp.endpoint=${OTEL_URI}
+    -Dquarkus.otel.exporter.otlp.endpoint=${OTEL_URI} \
+    -Dquarkus.otel.enabled=false
 
 FROM registry.access.redhat.com/ubi9/ubi-minimal:9.2
 WORKDIR /app
@@ -33,5 +34,6 @@ ENTRYPOINT [ \
 "/app/application", \
 "-Dquarkus.http.host=0.0.0.0", \
 "-Dquarkus.mongodb.connection-string=${MONGO_URI}", \
-"-Dquarkus.otel.exporter.otlp.endpoint=${OTEL_URI}" \
+"-Dquarkus.otel.exporter.otlp.endpoint=${OTEL_URI}", \
+"-Dquarkus.otel.enabled=false"
 ]
