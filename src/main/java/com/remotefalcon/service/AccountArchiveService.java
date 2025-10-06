@@ -14,6 +14,7 @@ import lombok.extern.jbosslog.JBossLog;
 import org.bson.Document;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @JBossLog
@@ -34,6 +35,13 @@ public class AccountArchiveService {
         log.info("Finished archive process");
     }
 
+    @Scheduled(every = "24h")
+    void runDeleteUnverifiedShowsProcess() {
+        log.info("Running delete unverified shows process");
+        this.deleteUnverifiedShows();
+        log.info("Finished delete unverified shows process");
+    }
+
     private void archiveAccounts() {
         log.info("Getting shows with lastLoginDate older than 24 months (" + LocalDate.now().minusMonths(24).atStartOfDay() + ")");
         List<Show> showsOlderThan24Months = showRepository.getShowsOlderThan24Months();
@@ -44,6 +52,18 @@ public class AccountArchiveService {
             }
         });
         log.info("Finished archiving accounts");
+    }
+
+    private void deleteUnverifiedShows() {
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
+        log.info("Getting unverified shows with createdDate older than 7 days (" + sevenDaysAgo + ")");
+        List<Show> unverifiedShows = showRepository.getUnverifiedShowsOlderThan7Days();
+        log.info("Found " + unverifiedShows.size() + " unverified shows with createdDate older than 7 days");
+        unverifiedShows.forEach(show -> {
+            log.info("Deleting unverified show: " + show.getEmail() + " (created: " + show.getCreatedDate() + ")");
+            showRepository.delete(show);
+        });
+        log.info("Finished deleting unverified shows");
     }
 
     private boolean backupAccount(Show show) {
