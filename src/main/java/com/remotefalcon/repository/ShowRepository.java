@@ -16,6 +16,6 @@ public class ShowRepository implements PanacheMongoRepository<Show> {
 
     public List<Show> getUnverifiedShowsOlderThan7Days() {
         LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
-        return list("emailVerified = false and createdDate < ?1", sevenDaysAgo);
+        return list("emailVerified = ?1 and createdDate < ?2", false, sevenDaysAgo);
     }
 }
